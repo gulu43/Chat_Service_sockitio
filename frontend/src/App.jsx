@@ -1,33 +1,31 @@
-// App.jsx or any component
-import { useEffect, useState } from "react";
-import { socket } from "./socket";
 import './App.css'
+import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
+import { Loginpage } from './Loginpage.jsx';
+import { ChatArea } from './ChatArea.jsx';
+import { createContext } from 'react';
+import { useState } from 'react';
+
+export const User = createContext();
 
 function App() {
-  const [logs, setLogs] = useState([]);
-
-  useEffect(() => {
-    socket.on("user-connection", (msg) => {
-      setLogs((prev) => [...prev, msg]);
-    });
-
-    socket.on("user-disconnect", (msg) => {
-      setLogs((prev) => [...prev, msg]);
-    });
-
-    return () => {
-      socket.off("user-connection");
-      socket.off("user-disconnect");
-    };
-  }, []);
+  const url = import.meta.env.VITE_SOCKET_URL;
+  const navigate = useNavigate();
+  const [user, setUser] = useState('');
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Socket.IO React Client</h2>
-      {logs.map((log, i) => (
-        <p key={i}>{log}</p>
-      ))}
-    </div>
+
+    <User.Provider value={ { user, setUser, navigate } }>
+      
+      {/* <Link to={`${url}/user/login`}>Login</Link>
+      <Link to={`${url}/user/chat`}>chat</Link>
+      <Link to={`${url}/`}>Home</Link> */}
+
+      <Routes>
+        <Route path='/' element={<Navigate to="/user/login" />} />
+        <Route path='/user/login' element={ <Loginpage/> } />
+        <Route path='/user/chat' element={ <ChatArea/> } />
+      </Routes>
+    </ User.Provider >
   );
 }
 

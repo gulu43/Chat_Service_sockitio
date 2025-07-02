@@ -1,1 +1,1 @@
-This is a sockit.io project a pratice fro main project
+This is a sockit.io project a pratice for main project
