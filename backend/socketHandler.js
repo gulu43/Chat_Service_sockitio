@@ -1,16 +1,35 @@
+const connectedUsers = {}; 
+
 const socketHeadersMethords = (io) =>{
-    io.on('connection', (socket)=>{
-        io.emit("user-connection", `${socket.id} connected.`) 
+
+    io.on('connection', (socket) => {
+        // console.log(`${socket.id} connected`);
+        io.emit("user-connection", `${socket.id} connected.`);
+
+        socket.on("register-user", (username) => {
+            connectedUsers[socket.id] = username;
+            // console.log("Connected Users:", connectedUsers);
+            io.emit("users-list", connectedUsers); 
+        }); 
+
+        socket.on("private-message", ({ to, from, msg }) => {
+            console.log('in server: ',to, from , msg);
+            
+            io.to(to).emit("private-message", { from, msg });
+        });
 
         socket.on("send-message",(message)=>{
             io.emit("send-message", `${message.user}: ${message.message }`)
         })
 
-        socket.on('disconnect', ()=>{
-            socket.broadcast.emit("user-disconnect", `${socket.id} disconnected`)
-        })
+         socket.on('disconnect', () => {
+            delete connectedUsers[socket.id];
+            // io.emit("users-list", connectedUsers);
+            socket.broadcast.emit("user-disconnect", `${socket.id} disconnected`);
+        });
 
     })
+
 }
 
 export { socketHeadersMethords }

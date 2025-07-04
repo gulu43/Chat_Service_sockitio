@@ -16,6 +16,10 @@ function ChatArea() {
       setLogs((prev) => [...prev, msg]);
     });
 
+    socket.on("register-user", (msg) => {
+      setLogs( prev => ({ ...prev, msg}) );
+    });
+
     socket.on("send-message", (msg) => {
       setLogs((prev) => [...prev, msg]);
     });
@@ -26,6 +30,7 @@ function ChatArea() {
 
     return () => {
       socket.off("user-connection");
+      socket.off("register-user"); 
       socket.off("send-message"); 
       socket.off("user-disconnect");
     };
@@ -34,7 +39,13 @@ function ChatArea() {
   function sendFn() {
     socket.emit("send-message", message);
   }
-  
+
+  const navPToPChat = () => {
+        navigate('/user/ptopchat')
+    }
+  const navPToMChat = () => {
+        navigate('/user/ptomchat')
+    }
 
   return (
     <>
@@ -52,7 +63,12 @@ function ChatArea() {
         'user': user
       }))
     } } />
-    <button type="submit" className="btn" onClick={sendFn}>click to send</button>
+    <button type="submit" className="btn" onClick={sendFn}>click to send</button><br/><br/><br/>
+    <div>you have to find user by sockit.id not username</div>
+    <button type="submit" className="btn" onClick={ navPToPChat}>Private Chat</button>
+    <br/>
+    <div>you have to add people by socket.id not username</div>
+    <button type="submit" className="btn" onClick={navPToMChat}>Group Chat</button>
     </>
   );
 }

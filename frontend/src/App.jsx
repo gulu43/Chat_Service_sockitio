@@ -4,6 +4,8 @@ import { Loginpage } from './Loginpage.jsx';
 import { ChatArea } from './ChatArea.jsx';
 import { createContext } from 'react';
 import { useState } from 'react';
+import { PtoMChat } from './PtoMChat.jsx';
+import { PtoPChat } from './PtoPChat.jsx';
 
 export const User = createContext();
 
@@ -24,6 +26,8 @@ function App() {
         <Route path='/' element={<Navigate to="/user/login" />} />
         <Route path='/user/login' element={ <Loginpage/> } />
         <Route path='/user/chat' element={ <ChatArea/> } />
+        <Route path='/user/ptopchat' element={ <PtoPChat/> } />
+        <Route path='/user/ptomchat' element={ <PtoMChat/> } />
       </Routes>
     </ User.Provider >
   );
