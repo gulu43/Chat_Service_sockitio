@@ -18,6 +18,16 @@ const socketHeadersMethords = (io) =>{
             io.to(to).emit("private-message", { from, msg });
         });
 
+        socket.on("adding-in-group",(  groupName ) => {
+            socket.join(groupName);
+            io.to(groupName).emit("adding-in-group", `${connectedUsers[socket.id] || socket.id} joined the group ${groupName}.`);
+        })
+
+        socket.on("sending-group-chat", ( {groupName, message } ) => {
+            const msgText = `${message.user}: ${message.message}`;
+            io.to(groupName).emit("sending-group-chat", msgText);
+        })        
+
         socket.on("send-message",(message)=>{
             io.emit("send-message", `${message.user}: ${message.message }`)
         })
